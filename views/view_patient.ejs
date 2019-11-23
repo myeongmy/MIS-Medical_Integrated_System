@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Hospital Page</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--===============================================================================================-->
+	<link rel="icon" type="image/png" href="/images/icons/favicon.ico"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="/vendor/bootstrap/css/bootstrap.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="/fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="/vendor/animate/animate.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="/vendor/css-hamburgers/hamburgers.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="/vendor/select2/select2.min.css">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="/css/util.css">
+	<link rel="stylesheet" type="text/css" href="/css/main.css">
+<!--===============================================================================================-->
+    <style>
+        .navbar-brand{
+          color: #7AACB3;
+      }
+        .wrap-contact2{
+            width: 1000px;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+  <nav class="navbar bg-dark fixed-top" id="mainNav">
+    <div class="container">
+      <a class="navbar-brand" href="/">MIS | Hospital</a>
+      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        Menu
+      </button>
+      <li class="nav-item">
+        <a class="nav-link" href="/logout">logout</a>
+      </li>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="/login/hospital">Write medical chart</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="/view_patient">View patient information</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+	<div class="bg-contact2" style="background-image: url('/images/bg-01.jpg');">
+		<div class="container-contact2">
+			<div class="wrap-contact2">
+				
+					<span class="contact2-form-title">
+						View patient information
+					</span>
+                    <form action="/search" method="post">
+                    <div class="input-group mb-3">
+                      <input type="text" class="form-control" placeholder="Patient's id" name="patient_id">
+                      <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="submit">Search</button>
+                      </div>
+                    </div>
+                    </form>
+                    <% if(session == true) { %>
+                        <span style="font-weight: bold;">Personal Profile</span><br/>
+                        <span>Name  |  <%= name %></span><br/>
+                        <span>Age   |  <%= age %></span><br/>
+                        <span>Contact |  <%= contact %></span><br/><br/>
+                
+                        <span style="font-weight: bold;">Medical History (In recent order)</span><br/><br/>
+                        
+                        <% for(var i=0;i<results.length;i++){ %>
+                                        <div style="border: 1px solid; padding: 10px; border-radius: 0.5em;">
+                                        <span>Hospital ID | <%= results[i].hospital_id %></span><br/>
+                                       <span>Reception time | <%= results[i].receipt_time %></span><br/>
+                                        <span>Symptom | <%= results[i].symptom %></span><br/>
+                                        <span>Diagnosis name | <%= results[i].diagnosis_name %></span><br/>
+                                        <span>Treatment name | <%= results[i].med_tr_name %></span><br/>
+                                        <span>Prescription | <%= results[i].pill_name %></span>
+                                        </div><br/>
+                        <%    } %>
+                <% } %>
+                    
+
+				
+			</div>
+		</div>
+	</div>
+
+
+
+
+<!--===============================================================================================-->
+	<script src="/vendor/jquery/jquery-3.2.1.min.js"></script>
+<!--===============================================================================================-->
+	<script src="/vendor/bootstrap/js/popper.js"></script>
+	<script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
+<!--===============================================================================================-->
+	<script src="/vendor/select2/select2.min.js"></script>
+<!--===============================================================================================-->
+	<script src="/js/main.js"></script>
+
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-23581568-13"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+
+	  gtag('config', 'UA-23581568-13');
+	</script>
+
+</body>
+</html>

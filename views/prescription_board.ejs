@@ -28,6 +28,9 @@
             width: 1000px;
             height: auto;
         }
+        td{
+            padding: 10px;
+        }
     </style>
 </head>
 <body>
@@ -58,7 +61,33 @@
 					<span class="contact2-form-title">
 						Prescription Board (Real time)
 					</span>
-
+                    <div style = "overflow: scroll;">
+                     <% for(var i=0;i<results.length;i++){ %>
+                                        <div style="display: inline-block; border: 1px solid; float: left; padding: 10px; border-radius: 0.5em;">
+                                            <span style="color: #7AACB4;">Receipt time</span><br/>
+                                            <span><%= results[i].receipt_time %></span><br/>
+                                            <span style="color: #7AACB4;">Patient id</span><br/>
+                                            <span><%= results[i].patient_id %></span><br/>
+                                            <table style="text-align: center;">
+                                                <tr>
+                                                    <td style="color: #7AACB4;">Pill code</td>
+                                                    <td style="color: #7AACB4;">Pill name</td>
+                                                    <td style="color: #7AACB4;">Unit</td>
+                                                </tr>
+                                                <tr>
+                                                    <td><%= results[i].pill_code %></td>
+                                                    <td><%= results[i].pill_name %></td>
+                                                    <td><%= results[i].prsc_unit %></td>
+                                                </tr>
+                                            </table><br/>
+                                            <form action="/delete_pres" method="post">
+                                                <input type=hidden name="id" value="<%= results[i].chart_no %>">
+                                            <input style="float: right;" type="submit" value="Finish">
+                                            </form>
+                                       
+                                        </div>
+                        <%    } %>
+                </div>
                    
                     
 

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Hospital Page</title>
+	<title>Patient Page</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <!--===============================================================================================-->
@@ -25,7 +25,7 @@
           color: #7AACB3;
       }
         .wrap-contact2{
-            width: 1000px;
+            
             height: auto;
         }
     </style>
@@ -34,7 +34,7 @@
     <!-- Navigation -->
   <nav class="navbar bg-dark fixed-top" id="mainNav">
     <div class="container">
-      <a class="navbar-brand" href="/">MIS | Hospital</a>
+      <a class="navbar-brand" href="/">MIS | Patient</a>
       <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         Menu
       </button>
@@ -43,57 +43,66 @@
       </li>
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
-          <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="/login/hospital">Write medical chart</a>
+           <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="/update">Update profile</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="/view_chart">View medical chart</a>
+            <a class="nav-link js-scroll-trigger" href="/login/patient">View prescriptions</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link js-scroll-trigger" href="/view_patient">View patient information</a>
+            <a class="nav-link js-scroll-trigger" href="/view_receipt">View receipts</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="/send_receipt">Send receipts</a>
           </li>
         </ul>
       </div>
     </div>
   </nav>
 
-	<div class="bg-contact2" style="background-image: url('/images/bg-01.jpg');">
+	<div class="bg-contact2" style="background-image: url('/images/bg-02.jpg');">
 		<div class="container-contact2">
 			<div class="wrap-contact2">
-				
+				<form action="/update_fin" class="contact2-form validate-form" method="post">
 					<span class="contact2-form-title">
-						View patient information
+						Update my profile
 					</span>
-                    <form action="/search" method="post">
-                    <div class="input-group mb-3">
-                      <input type="text" class="form-control" placeholder="Patient's id" name="patient_id">
-                      <div class="input-group-append">
-                        <button class="btn btn-outline-secondary" type="submit">Search</button>
-                      </div>
-                    </div>
-                    </form>
-                    <% if(session == true) { %>
-                        <span style="font-weight: bold;">Personal Profile</span><br/>
-                        <span>Name  |  <%= results[0].patient_name %></span><br/>
-                        <span>Age   |  <%= results[0].age %></span><br/>
-                        <span>Contact |  <%= results[0].contact %></span><br/><br/>
-                
-                        <span style="font-weight: bold;">Medical History (In recent order)</span><br/><br/>
-                        
-                        <% for(var i=0;i<results.length;i++){ %>
-                                        <div style="border: 1px solid; padding: 10px; border-radius: 0.5em;">
-                                        <span>Hospital ID | <%= results[i].hospital_id %></span><br/>
-                                       <span>Reception time | <%= results[i].receipt_time %></span><br/>
-                                        <span>Symptom | <%= results[i].symptom %></span><br/>
-                                        <span>Diagnosis name | <%= results[i].diagnosis_name %></span><br/>
-                                        <span>Treatment name | <%= results[i].med_tr_name %></span><br/>
-                                            <span>Prescription | <%= results[i].pill_name %></span><br/>
-                                        </div><br/>
-                        <%    } %>
-                <% } %>
+
+					<div class="wrap-input2 validate-input" data-validate="Patient id is required">
+						<input class="input2" type="text" name="patientid" value="<%= result[0].patient_id %>">
+						<span class="focus-input2" data-placeholder="Patient ID"></span>
+					</div>
+
+					<div class="wrap-input2 validate-input" data-validate = "Password is required">
+						<input class="input2" type="text" name="patientpw" value="<%= result[0].patient_pw %>">
+						<span class="focus-input2" data-placeholder="Password"></span>
+					</div>
+
+					<div class="wrap-input2 validate-input" data-validate = "Patient name is required">
+						<input class="input2" type="text" name="patientname" value="<%= result[0].patient_name %>">
+						<span class="focus-input2" data-placeholder="Name"></span>
+					</div>
+                    
+                    <div class="wrap-input2 validate-input" data-validate="Age is required">
+						<input class="input2" type="text" name="patientage" value="<%= result[0].age %>">
+						<span class="focus-input2" data-placeholder="Age"></span>
+					</div>
+                    
+                    <div class="wrap-input2 validate-input" data-validate="Contact is required">
+						<input class="input2" type="text" name="patientcontact" value="<%= result[0].contact %>">
+						<span class="focus-input2" data-placeholder="Contact"></span>
+					</div>
                     
 
-				
+					<div class="container-contact2-form-btn">
+						<div class="wrap-contact2-form-btn">
+							<div class="contact2-form-bgbtn"></div>
+							<button type="submit" class="contact2-form-btn">
+								Update
+							</button>
+						</div>
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>

@@ -28,6 +28,10 @@
             width: 1000px;
             height: auto;
         }
+        
+        td, th{
+            padding: 15px;
+        }
     </style>
 </head>
 <body>
@@ -62,35 +66,46 @@
 			<div class="wrap-contact2">
 				
 					<span class="contact2-form-title">
-						View patient information
+						View medical charts
 					</span>
-                    <form action="/search" method="post">
-                    <div class="input-group mb-3">
-                      <input type="text" class="form-control" placeholder="Patient's id" name="patient_id">
-                      <div class="input-group-append">
-                        <button class="btn btn-outline-secondary" type="submit">Search</button>
+                    <form action="/view_chart/patient" method="post">
+                    <div align="right" class="input-group mb-3">
+                      <div align="right" class="input-group-append">
+                          <select name="patient">
+                            <option value="">Select patient</option>
+                            <% for(var i=0;i< names.length;i++){ %>
+                                <option value="<%= names[i].patient_name %>"><%= names[i].patient_name %></option>                                                    
+                            <% } %>
+                        </select>
+                        <button class="btn btn-outline-secondary" type="submit">Show by patient</button>
                       </div>
                     </div>
                     </form>
-                    <% if(session == true) { %>
-                        <span style="font-weight: bold;">Personal Profile</span><br/>
-                        <span>Name  |  <%= results[0].patient_name %></span><br/>
-                        <span>Age   |  <%= results[0].age %></span><br/>
-                        <span>Contact |  <%= results[0].contact %></span><br/><br/>
+            
                 
-                        <span style="font-weight: bold;">Medical History (In recent order)</span><br/><br/>
-                        
-                        <% for(var i=0;i<results.length;i++){ %>
-                                        <div style="border: 1px solid; padding: 10px; border-radius: 0.5em;">
-                                        <span>Hospital ID | <%= results[i].hospital_id %></span><br/>
-                                       <span>Reception time | <%= results[i].receipt_time %></span><br/>
-                                        <span>Symptom | <%= results[i].symptom %></span><br/>
-                                        <span>Diagnosis name | <%= results[i].diagnosis_name %></span><br/>
-                                        <span>Treatment name | <%= results[i].med_tr_name %></span><br/>
-                                            <span>Prescription | <%= results[i].pill_name %></span><br/>
-                                        </div><br/>
+                        <span style="font-weight: bold;">In recent order</span><br/><br/>
+                        <table width="800" style="margin: auto; text-align: center;">
+                            <tr style="color: #7AACB4;">
+                                <td>Receiption time</td>
+                                <td>Patient name</td>
+                                <td>Symptom</td>
+                                <td>Diagnosis name</td>
+                                <td>Treatment name</td>
+                                <td>Pill name</td>
+                                <td>Unit</td>
+                            </tr>
+                       <% for(var i=0;i<results.length;i++){ %>
+                                        <tr>
+                                       <td><%= results[i].receipt_time %></td>
+                                        <td><%= results[i].patient_name %></td>
+                                        <td><%= results[i].symptom %></td>
+                                        <td><%= results[i].diagnosis_name %></td>
+                                        <td><%= results[i].med_tr_name %></td>
+                                            <td><%= results[i].pill_name %></td>
+                                            <td><%= results[i].prsc_unit %></td>
+                                        </tr>
                         <%    } %>
-                <% } %>
+                       </table>
                     
 
 				

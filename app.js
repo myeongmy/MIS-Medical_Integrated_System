@@ -49,7 +49,7 @@ app.get('/login/:role', function(req, res){
         }
         else if(req.params.role === 'patient'){
             if(req.session.role == 'patient'){
-                var sql = 'select hospital_name, contact, receipt_time, patient_id, patient_name, prsc_unit, C.pill_code, pill_name from (select hospital_name, contact, receipt_time, patient_id, patient_name, B.diagnosis_code, prsc_unit, pill_code from (select hospital_name, contact, receipt_time, patient_id, patient_name, diagnosis_code, prsc_unit from (select hospital_id, receipt_time, patient.patient_id, diagnosis_code, prsc_unit, patient_name from medical_chart join patient on medical_chart.patient_id = patient.patient_id) AS A join hospital on A.hospital_id = hospital.hospital_id) AS B join prescription_guide on B.diagnosis_code = prescription_guide.diagnosis_code) AS C join pill on pill.pill_code = C.pill_code where patient_id = ?';
+                var sql = 'select hospital_name, contact, receipt_time, patient_id, patient_name, prsc_unit, C.pill_code, pill_name from (select hospital_name, contact, receipt_time, patient_id, patient_name, B.diagnosis_code, prsc_unit, pill_code from (select hospital_name, contact, receipt_time, patient_id, patient_name, diagnosis_code, prsc_unit from (select hospital_id, receipt_time, patient.patient_id, diagnosis_code, prsc_unit, patient_name from medical_chart join patient on medical_chart.patient_id = patient.patient_id) AS A join hospital on A.hospital_id = hospital.hospital_id) AS B join prescription_guide on B.diagnosis_code = prescription_guide.diagnosis_code) AS C join pill on pill.pill_code = C.pill_code where patient_id = ? ORDER BY receipt_time DESC';
             var par = [req.session.nickname];
             connection.query(sql, par, function(err, rows){
                 if(rows.length < 1)
@@ -66,9 +66,23 @@ app.get('/login/:role', function(req, res){
             
         }else if(req.params.role === 'pharmacy'){
             if(req.session.role == 'pharmacy'){
-                res.render('prescription_board.ejs');
+                var sql = 'select chart_no, receipt_time, patient_id, pill.pill_code, pill_name, prsc_unit from prescription_chart join pill on prescription_chart.pill_code = pill.pill_code where pharmacy_id = ?';
+                var pa = [req.session.nickname];
+                connection.query(sql, pa, function(err, results){
+                    
+                    res.render('prescription_board.ejs', {results: results});
+                })
+                
             }else{
                 res.send('<script type="text/javascript">alert("Permission denied!!");</script>');
+            }
+        }else{
+            if(req.session.role == 'insuranceCompany'){
+                var sql='select chart_no, receipt_time, patient_id, tot_expense, med_tr_name from insurance_chart join medical_tr on insurance_chart.med_tr_code = medical_tr.med_tr_code where insurance_id = ?';
+                var pa = [req.session.nickname];
+                connection.query(sql, pa, function(err, results){
+                    res.render('view_claims.ejs', {results: results});
+                })
             }
         }
             
@@ -253,6 +267,34 @@ app.post('/create_chart', function(req, res){
 
 app.get('/view_chart', function(req, res){
     
+    var sql = 'SELECT receipt_time, patient_name, symptom, diagnosis_name, med_tr_name, pill_name, prsc_unit FROM medical_chart NATURAL JOIN patient as MP JOIN vDcombMedPrsc using (diagnosis_code) where hospital_id = ? ORDER BY receipt_time DESC';
+    var pa = [req.session.nickname];
+    
+    connection.query(sql, pa, function(err, rows){
+        sql = 'select patient_name from patient';
+        connection.query(sql, function(err, names){
+            res.render('view_chart.ejs', {results: rows, names: names});
+        })
+        
+    })
+   
+    
+})
+
+app.post('/view_chart/patient', function(req, res){
+    
+    var sql = 'SELECT receipt_time, patient_name, symptom, diagnosis_name, med_tr_name, pill_name, prsc_unit FROM medical_chart NATURAL JOIN patient as MP JOIN vDcombMedPrsc using (diagnosis_code) where hospital_id = ? and patient_name = ? ORDER BY receipt_time DESC';
+    var pa = [req.session.nickname, req.body.patient];
+    
+    connection.query(sql, pa, function(err, rows){
+        sql = 'select patient_name from patient';
+        connection.query(sql, function(err, names){
+            res.render('view_chart.ejs', {results: rows, names: names});
+        })
+        
+    })
+   
+    
 })
 
 app.get('/view_patient', function(req, res){
@@ -260,35 +302,13 @@ app.get('/view_patient', function(req, res){
 })
 
 app.post('/search', function(req, res){
+    var sql = 'SELECT hospital_id, patient_name, age, contact, receipt_time, symptom, diagnosis_name, med_tr_name, pill_name, default_quantity FROM medical_chart as MC, patient as P, vDcombMedPrsc as V WHERE MC.diagnosis_code = V.diagnosis_code AND MC.patient_id=P.patient_id AND P.patient_id = ? ORDER BY receipt_time desc';
+    var pa = [req.body.patient_id];
     
-    var sql = 'select * from patient where patient_id = ?';
-    var par = [req.body.patient_id];
-    connection.query(sql, par, function(err, rows, fields){
-        if(err){
-            res.send('<script type="text/javascript">alert("Please write correct id!!");</script>');
-        }else{
-            sql = 'SELECT receipt_time, symptom, diagnosis_name, med_tr_name, pill_name, default_quantity FROM medical_chart as MC, patient as P, vDcombMedPrsc as V WHERE MC.diagnosis_code = V.diagnosis_code AND MC.patient_id=P.patient_id AND P.patient_id = ? ORDER BY receipt_time desc';
-            par = [req.body.patient_id];
-            connection.query(sql, par, function(err, results){
-                sql = 'SELECT DISTINCT med_tr_name FROM (SELECT patient_name, age, contact, receipt_time, symptom, diagnosis_name, med_tr_name, pill_name, default_quantity FROM medical_chart as MC, patient as P, vDcombMedPrsc as V WHERE MC.diagnosis_code = V.diagnosis_code AND MC.patient_id=P.patient_id AND P.patient_id = ? ORDER BY receipt_time desc) AS A';
-                par = [req.body.patient_id];
-                connection.query(sql, par, function(err, trs){
-                    sql = 'SELECT DISTINCT pill_name FROM (SELECT patient_name, age, contact, receipt_time, symptom, diagnosis_name, med_tr_name, pill_name, default_quantity FROM medical_chart as MC, patient as P, vDcombMedPrsc as V WHERE MC.diagnosis_code = V.diagnosis_code AND MC.patient_id=P.patient_id AND P.patient_id = ? ORDER BY receipt_time desc) AS A';
-                     par = [req.body.patient_id];
-                    connection.query(sql, par, function(err, pills){
-                        sql = 'SELECT DISTINCT receipt_time FROM (SELECT patient_name, age, contact, receipt_time, symptom, diagnosis_name, med_tr_name, pill_name, default_quantity FROM medical_chart as MC, patient as P, vDcombMedPrsc as V WHERE MC.diagnosis_code = V.diagnosis_code AND MC.patient_id=P.patient_id AND P.patient_id = ? ORDER BY receipt_time desc) AS A';
-                        par = [req.body.patient_id];
-                        connection.query(sql, par, function(err, time){
-                            res.render('view_patient.ejs', {id: req.body.patient_id, name: rows[0].patient_name, contact: rows[0].contact, age: rows[0].age, session: true, results: results, trs: trs, pills: pills, time: time});
-                        })
-                        
-                    })
-                })
-                
-            })
-            
-        }
+    connection.query(sql, pa, function(err, rows){
+        res.render('view_patient.ejs', {session: true, results: rows});
     })
+    
 })
 
 app.get('/prescription/detail/:i', function(req, res){
@@ -306,7 +326,7 @@ app.post('/pharmacy_tran', function(req, res){
         if(err){
             throw err;
         }
-        var sql = 'insert into prescription_chart values (?, NOW(), ?, ?, ?)';
+        var sql = 'insert into prescription_chart (pharmacy_id, receipt_time, patient_id, pill_code, prsc_unit) values (?, NOW(), ?, ?, ?)';
         var pa = [req.body.pharmacy, req.session.nickname, req.body.pillcode, req.body.unit];
         connection.query(sql, pa, function(err, result){
             if(err){
@@ -348,8 +368,8 @@ app.post('/insurance_tran/:i', function(req, res){
         var sql1 = 'select med_tr_code from medical_tr where med_tr_name = ?';
         var par1 = [req.session.receipts[req.body.box].med_tr_name];
         connection.query(sql1, par1, function(err, rows){
-            var sql = 'insert into insurance_chart (insurance_id, receipt_time, patient_id, med_tr_code) values (?, NOW(), ?, ?)';
-        var pa = [req.body.insurancecompany, req.session.nickname, rows[0].med_tr_code];
+            var sql = 'insert into insurance_chart (insurance_id, receipt_time, patient_id, med_tr_code, med_ch_time, tot_expense) values (?, NOW(), ?, ?, NOW() - 10, ?)';
+        var pa = [req.body.insurancecompany, req.session.nickname, rows[0].med_tr_code, req.session.receipts[req.body.box].expense];
         connection.query(sql, pa, function(err, result){
             if(err){
                 console.log(err);
@@ -378,7 +398,10 @@ app.post('/insurance_tran/:i', function(req, res){
 app.get('/view_receipt', function(req, res){
     var sql = 'select * from patient where patient_id = ?';
     connection.query(sql, [req.session.nickname], function(err, result){
-        sql = 'select hospital_name, receipt_time, symptom, diagnosis_name, med_tr_name, expense from (select hospital_id, receipt_time, symptom, diagnosis_name, med_tr_name, expense, pill_name from (select hospital_id, receipt_time, symptom, diagnosis_name, med_tr_name, expense, pill_code from (select hospital_id, receipt_time, symptom, C.diagnosis_code, diagnosis_name, med_tr_name, expense from (select hospital_id, receipt_time, symptom, B.diagnosis_code, diagnosis_name, med_tr_code from (select hospital_id, receipt_time, symptom, A.diagnosis_code, diagnosis_name from (select hospital_id, receipt_time, symptom, diagnosis_code from patient join medical_chart on patient.patient_id = medical_chart.patient_id and patient.patient_id = ?) AS A JOIN diagnosis on A.diagnosis_code = diagnosis.diagnosis_code) AS B JOIN medical_tr_guide on B.diagnosis_code = medical_tr_guide.diagnosis_code) AS C JOIN medical_tr on C.med_tr_code = medical_tr.med_tr_code) AS D JOIN prescription_guide ON D.diagnosis_code = prescription_guide.diagnosis_code) AS E JOIN pill on pill.pill_code = E.pill_code ORDER BY receipt_time DESC) AS E JOIN hospital on hospital.hospital_id = E.hospital_id;';
+        sql = 'select hospital_name, receipt_time, symptom, diagnosis_name, med_tr_name, expense from (select hospital_id, receipt_time, symptom, diagnosis_name, med_tr_name, expense, pill_name from (select hospital_id, receipt_time, symptom, diagnosis_name, med_tr_name, expense, pill_code from (select hospital_id, receipt_time, symptom, C.diagnosis_code, diagnosis_name, med_tr_name, expense from (select hospital_id, receipt_time, symptom, B.diagnosis_code, diagnosis_name, med_tr_code from (select hospital_id, receipt_time, symptom, A.diagnosis_code, diagnosis_name from (select hospital_id, receipt_time, symptom, diagnosis_code from patient join medical_chart on patient.patient_id = medical_chart.patient_id and patient.patient_id = ?) AS A JOIN diagnosis on A.diagnosis_code = diagnosis.diagnosis_code) AS B JOIN medical_tr_guide on B.diagnosis_code = medical_tr_guide.diagnosis_code) AS C JOIN medical_tr on C.med_tr_code = medical_tr.med_tr_code) AS D JOIN prescription_guide ON D.diagnosis_code = prescription_guide.diagnosis_code) AS E JOIN pill on pill.pill_code = E.pill_code ORDER BY receipt_time DESC) AS E JOIN hospital on hospital.hospital_id = E.hospital_id ORDER BY receipt_time DESC';
+        
+        // Total expense 뽑아내기 위한 aggregation 함수
+        var sql1 = 'select SUM(expense) from (select hospital_name, receipt_time, symptom, diagnosis_name, med_tr_name, expense from (select hospital_id, receipt_time, symptom, diagnosis_name, med_tr_name, expense, pill_name from (select hospital_id, receipt_time, symptom, diagnosis_name, med_tr_name, expense, pill_code from (select hospital_id, receipt_time, symptom, C.diagnosis_code, diagnosis_name, med_tr_name, expense from (select hospital_id, receipt_time, symptom, B.diagnosis_code, diagnosis_name, med_tr_code from (select hospital_id, receipt_time, symptom, A.diagnosis_code, diagnosis_name from (select hospital_id, receipt_time, symptom, diagnosis_code from patient join medical_chart on patient.patient_id = medical_chart.patient_id and patient.patient_id = ?) AS A JOIN diagnosis on A.diagnosis_code = diagnosis.diagnosis_code) AS B JOIN medical_tr_guide on B.diagnosis_code = medical_tr_guide.diagnosis_code) AS C JOIN medical_tr on C.med_tr_code = medical_tr.med_tr_code) AS D JOIN prescription_guide ON D.diagnosis_code = prescription_guide.diagnosis_code) AS E JOIN pill on pill.pill_code = E.pill_code ORDER BY receipt_time DESC) AS E JOIN hospital on hospital.hospital_id = E.hospital_id ORDER BY receipt_time DESC) AS A GROUP BY receipt_time';
         connection.query(sql, [req.session.nickname], function(err, results){
             res.render('view_receipt.ejs', {patient: result[0], results: results, i: 0});
         })
@@ -403,6 +426,35 @@ app.get('/send_receipt', function(req, res){
     
 })
 
+app.get('/update', function(req, res){
+    var sql = 'select * from patient where patient_id = ?';
+    var pa = [req.session.nickname];
+    connection.query(sql, pa, function(err, result){
+        if(err)
+            console.log(err);
+        res.render('update_profile.ejs', {result: result});
+    })
+})
+
+app.post('/update_fin', function(req, res){
+    var sql = 'update patient set patient_id = ?, patient_pw = ?, patient_name = ?, age = ?, contact = ? where patient_id = ?';
+    var pa = [req.body.patientid, req.body.patientpw, req.body.patientname, req.body.patientage, req.body.patientcontact, req.session.nickname];
+    connection.query(sql, pa, function(err, result){
+        req.session.nickname = req.body.patientid;
+        req.session.save();
+        res.send('<script type="text/javascript">alert("Updated!!!");</script>');
+    })
+})
+
+app.post('/delete_pres', function(req, res){
+    var sql = 'delete from prescription_chart where chart_no = ?';
+    var pa = [req.body.id];
+    connection.query(sql, pa, function(err, result){
+        if(err)
+            console.log(err);
+        res.redirect('/login/pharmacy')
+    })
+})
 app.listen(3001, function(req, res){
     console.log("Connecting to 3001 port!!!");
 })

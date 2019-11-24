@@ -29,15 +29,7 @@
             height: auto;
         }
     </style>
-    <script type="text/javascript">
-            var i = 0;
-            function increase(){
-                var date = document.getElementById("test");
-                date++;
-                i++;
-            }
-            
-    </script>
+    
 </head>
 <body>
     <!-- Navigation -->
@@ -52,6 +44,9 @@
       </li>
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="/update">Update profile</a>
+          </li>
           <li class="nav-item">
             <a class="nav-link js-scroll-trigger" href="/login/patient">View prescriptions</a>
           </li>
@@ -88,7 +83,7 @@
                                        <span>Hospital name | <%= results[i].hospital_name %></span><br/>
                                         <span>Symptom | <%= results[i].symptom %></span><br/>
                                         <span>Diagnosis name | <%= results[i].diagnosis_name %></span><br/><br/>
-                                        <table>
+                                        <table style="text-align: center;">
                                             <tr style="color: #7AACB4">
                                                 <td width="70">No</td>
                                                 <td width="200">Medical Treatment</td>
@@ -107,9 +102,7 @@
                                         </table>
                                         </div><br/>
                         <%    } %>
-                                        <form>
-                                            <button onclick="increase()">click!</button>
-                                        </form>
+                                        
                    
                 
 			</div>

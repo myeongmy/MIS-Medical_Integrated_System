@@ -44,6 +44,9 @@
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="/update">Update profile</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link js-scroll-trigger" href="/login/patient">View prescriptions</a>
           </li>
           <li class="nav-item">
@@ -59,14 +62,14 @@
 
 	<div class="bg-contact2" style="background-image: url('/images/bg-02.jpg');">
 		<div class="container-contact2">
-			<div class="wrap-contact2">
+			<div align="center" class="wrap-contact2">
 				
 					<span class="contact2-form-title">
 						View my prescriptions
 					</span>
                     <% for(var i=0; i < results.length; i++){ %>
                             <a href='/prescription/detail/<%= i %>'><span>Prescription <%= i+1 %> | <%= results[i].receipt_time %></span></a><br/>
-                            <span>---------------------------------------</span><br/>
+                            <span>-------------------------------------------------</span><br/>
                    <% } %>
                    
                     

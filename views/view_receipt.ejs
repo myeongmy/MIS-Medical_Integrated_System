@@ -29,6 +29,15 @@
             height: auto;
         }
     </style>
+    <script type="text/javascript">
+            var i = 0;
+            function increase(){
+                var date = document.getElementById("test");
+                date++;
+                i++;
+            }
+            
+    </script>
 </head>
 <body>
     <!-- Navigation -->
@@ -48,6 +57,9 @@
           </li>
           <li class="nav-item">
             <a class="nav-link js-scroll-trigger" href="/view_receipt">View receipts</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="/send_receipt">Send receipts</a>
           </li>
         </ul>
       </div>
@@ -69,7 +81,8 @@
                 
                         <span style="font-weight: bold;">Medical Expense Record (In recent order)</span><br/><br/>
                         
-                        <% for(var i=0;i<results.length;i++){ %>
+                        
+                                        <% for(var i=0;i<results.length;i++){ %>
                                         <div style="border: 1px solid; padding: 10px; border-radius: 0.5em;">
                                         <span>Date | <%= results[i].receipt_time %></span><br/>
                                        <span>Hospital name | <%= results[i].hospital_name %></span><br/>
@@ -94,10 +107,11 @@
                                         </table>
                                         </div><br/>
                         <%    } %>
+                                        <form>
+                                            <button onclick="increase()">click!</button>
+                                        </form>
                    
-                    
-
-				
+                
 			</div>
 		</div>
 	</div>
@@ -112,7 +126,7 @@
 	<script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
 <!--===============================================================================================-->
 	<script src="/vendor/select2/select2.min.js"></script>
-<!--===============================================================================================-->
+<!--===============================================================================================--
 	<script src="/js/main.js"></script>
 
 	<!-- Global site tag (gtag.js) - Google Analytics -->
@@ -124,6 +138,7 @@
 
 	  gtag('config', 'UA-23581568-13');
 	</script>
+    
 
 </body>
 </html>

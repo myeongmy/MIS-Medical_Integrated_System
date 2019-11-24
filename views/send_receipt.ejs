@@ -62,65 +62,60 @@
 			<div class="wrap-contact2">
 				
 					<span class="contact2-form-title">
-						Prescription
+						Send my receipts
 					</span>
-                    <table border="1" style="margin-left: auto; margin-right: auto;">
-                          <tr>
-                            <td>Receipt time</td>
-                            <td><%= result.receipt_time %></td>
-                            <td rowspan="2">Hospital</td>
-                            <td>Name</td>
-                            <td><%= result.hospital_name %></td>
-                          </tr>
-                          <tr>
-                            <td>Patient Name</td>
-                            <td><%= result.patient_name %></td>
-                            <td>Contact</td>
-                            <td><%= result.contact %></td>
-                          </tr>
-                          <tr>
-                            <td colspan="5">The disease classification symbol is not listed when the patient's request is made.</td>
-                          </tr>
-                          <tr>
-                            <td colspan="2">Pill code</td>
-                            <td colspan="2">Pill name</td>
-                            <td>Prescription Unit</td>
-                          </tr>
-                          <tr>
-                            <td colspan="2"><%= result.pill_code %></td>
-                            <td colspan="2"><%= result.pill_name %></td>
-                            <td><%= result.prsc_unit %></td>
-                          </tr>
-                    </table>
-                    <form action="/pharmacy_tran" method="post">
+                    <span style="font-weight: bold;">Patient Profile</span><br/>
+                        <span>ID  |  <%= patient.patient_id %></span><br/>
+                        <span>Name  |  <%= patient.patient_name %></span><br/>
+                        <span>Age   |  <%= patient.age %></span><br/>
+                        <span>Contact |  <%= patient.contact %></span><br/><br/>
+                
+                        <span style="font-weight: bold;">Medical Expense Record (In recent order)</span><br/><br/>
+                        <form action="/insurance_tran/<%= results.length %>" method="post">
+                        <div style="overflow: auto">
+                        <table style="margin: auto; text-align: center;">
+                            <tr height="30" style="color: #7AACB4;">
+                                <td>Select</td>
+                                <td>Date</td>
+                                <td>Hospital name</td>
+                                <td>Symptom</td>
+                                <td>Diagnosis</td>
+                                <td>Total expense</td>
+                            </tr>
+                            <% for(var i=0;i<results.length;i++) { %>
+                                <tr height="30">
+                                    <td><input type="checkbox" name="box" value="<%= i %>"></td>
+                                    <td><%= results[i].receipt_time %></td>
+                                    <td><%= results[i].hospital_name %></td>
+                                    <td><%= results[i].symptom %></td>
+                                    <td><%= results[i].diagnosis_name %></td>
+                                    <td><%= results[i].expense %></td>
+                                </tr>
+                           <% } %>
+                        </table>
+                </div>
+                
                     <div class="input-group mb-4" style="padding: 20px 350px;">
-                      <select name="pharmacy" align="center">
-                            <option value="">Select pharmacy</option>
-                            <% for(var i=0;i<pharmacies.length;i++){ %>
-                                <option value="<%= pharmacies[i].pharmacy_id %>"><%= pharmacies[i].pharmacy_id %></option>                                                    
+                      <select name="insurancecompany" align="center">
+                            <option value="">Select insurance company</option>
+                            <% for(var i=0;i<companies.length;i++){ %>
+                                <option value="<%= companies[i].insurance_id %>"><%= companies[i].insurance_id %></option>                                                    
                             <% } %>
                         </select>
-                        <input type="hidden" value="<%= result.receipt_time %>" name="time">
-                        <input type="hidden" value="<%= result.pill_code %>" name="pillcode">
-                        <input type="hidden" value="<%= result.prsc_unit %>" name="unit">
-                        <input type="submit" value="SEND">
+                        
+                        <input type="submit" value="Share">
                     </div>
                         
                     </form>
-                   <div class="container-contact2-form-btn">
-						<div class="wrap-contact2-form-btn">
-							<div class="contact2-form-bgbtn"></div>
-							<a href='/login/patient'><button type="submit" class="contact2-form-btn">
-								Back
-                            </button></a>
-						</div>
-					</div>
-                    
-
-				
+                   
+                
 			</div>
 		</div>
 	</div>
+
+
+
+
 <!--===============================================================================================-->
 	<script src="/vendor/jquery/jquery-3.2.1.min.js"></script>
 <!--===============================================================================================-->
@@ -128,7 +123,7 @@
 	<script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
 <!--===============================================================================================-->
 	<script src="/vendor/select2/select2.min.js"></script>
-<!--===============================================================================================-->
+<!--===============================================================================================--
 	<script src="/js/main.js"></script>
 
 	<!-- Global site tag (gtag.js) - Google Analytics -->
@@ -140,6 +135,7 @@
 
 	  gtag('config', 'UA-23581568-13');
 	</script>
+    
 
 </body>
 </html>

@@ -47,6 +47,9 @@
             <a class="nav-link js-scroll-trigger" href="/login/hospital">Write medical chart</a>
           </li>
           <li class="nav-item">
+            <a class="nav-link js-scroll-trigger" href="/view_chart">View medical chart</a>
+          </li>
+          <li class="nav-item">
             <a class="nav-link js-scroll-trigger" href="/view_patient">View patient information</a>
           </li>
         </ul>
@@ -77,14 +80,21 @@
                 
                         <span style="font-weight: bold;">Medical History (In recent order)</span><br/><br/>
                         
-                        <% for(var i=0;i<results.length;i++){ %>
+                        <% for(var i=0;i<time.length;i++){ %>
                                         <div style="border: 1px solid; padding: 10px; border-radius: 0.5em;">
-                                        <span>Hospital ID | <%= results[i].hospital_id %></span><br/>
                                        <span>Reception time | <%= results[i].receipt_time %></span><br/>
                                         <span>Symptom | <%= results[i].symptom %></span><br/>
                                         <span>Diagnosis name | <%= results[i].diagnosis_name %></span><br/>
-                                        <span>Treatment name | <%= results[i].med_tr_name %></span><br/>
-                                        <span>Prescription | <%= results[i].pill_name %></span>
+                                        <span>Treatment name | </span>
+                                         <%    for(var j=0;j<trs.length;j++){ %>
+                                            <span><%= trs[j].med_tr_name %>,</span>
+                                          <%  } %>
+                                            <br/>
+                                    <span>Prescription | </span>
+                                            <%    for(var j=0;j<pills.length;j++){ %>
+                                            <span><%= pills[j].pill_name %>,</span>
+                                          <%  } %>
+                                            <br/>
                                         </div><br/>
                         <%    } %>
                 <% } %>

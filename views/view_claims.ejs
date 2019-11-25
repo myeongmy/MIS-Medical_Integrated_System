@@ -25,7 +25,7 @@
           color: #7AACB3;
       }
         .wrap-contact2{
-            width: 1000px;
+            width: 800px;
             height: auto;
         }
     </style>
@@ -34,7 +34,7 @@
     <!-- Navigation -->
   <nav class="navbar bg-dark fixed-top" id="mainNav">
     <div class="container">
-      <a class="navbar-brand" href="/">MIS | Insurance Company</a>
+      <a class="navbar-brand" href="/"><img src="/logo60.png" />MIS | Insurance Company</a>
       <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         Menu
       </button>
@@ -60,9 +60,9 @@
 						View claims
 					</span>
                     <% for(var i=0;i<results.length;i++){ %>
-                                        <div style="display: inline-block;border: 1px solid; padding: 10px; border-radius: 0.5em;">
+                                        <div style="display: inline-block; border: 1px solid; padding: 10px; border-radius: 0.5em;">
                                             <span>No | <%= results[i].chart_no %></span><br/>
-                                        <span>Date | <%= results[i].receipt_time %></span><br/>
+                                        <span>Date | <%= results[i].i_receipt_time %></span><br/>
                                        <span>Patient | <%= results[i].patient_id%></span><br/>
                                         <span>Treatment | <%= results[i].med_tr_name %></span><br/>
                                         <span>Total expense | <%= results[i].tot_expense %></span><br/><br/>

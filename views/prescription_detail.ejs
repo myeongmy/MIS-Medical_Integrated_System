@@ -37,7 +37,7 @@
     <!-- Navigation -->
   <nav class="navbar bg-dark fixed-top" id="mainNav">
     <div class="container">
-      <a class="navbar-brand" href="/">MIS | Patient</a>
+      <a class="navbar-brand" href="/"><img src="/logo60.png" />MIS | Patient</a>
       <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         Menu
       </button>
@@ -73,7 +73,7 @@
                     <table border=1 style="margin: auto; text-align: center;">
                           <tr>
                             <td>Receipt time</td>
-                            <td><%= result.receipt_time %></td>
+                            <td><%= result.h_receipt_time %></td>
                             <td rowspan="2">Hospital</td>
                             <td>Name</td>
                             <td><%= result.hospital_name %></td>
@@ -106,7 +106,7 @@
                                 <option value="<%= pharmacies[i].pharmacy_id %>"><%= pharmacies[i].pharmacy_id %></option>                                                    
                             <% } %>
                         </select>
-                        <input type="hidden" value="<%= result.receipt_time %>" name="time">
+                        <input type="hidden" value="<%= result.h_receipt_time %>" name="time">
                         <input type="hidden" value="<%= result.pill_code %>" name="pillcode">
                         <input type="hidden" value="<%= result.prsc_unit %>" name="unit">
                         <input type="submit" value="SEND">

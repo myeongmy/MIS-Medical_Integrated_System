@@ -34,7 +34,7 @@
     <!-- Navigation -->
   <nav class="navbar bg-dark fixed-top" id="mainNav">
     <div class="container">
-      <a class="navbar-brand" href="/">MIS | Patient</a>
+      <a class="navbar-brand" href="/"><img src="/logo60.png" />MIS | Patient</a>
       <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         Menu
       </button>
@@ -68,7 +68,7 @@
 						View my prescriptions
 					</span>
                     <% for(var i=0; i < results.length; i++){ %>
-                            <a href='/prescription/detail/<%= i %>'><span>Prescription <%= i+1 %> | <%= results[i].receipt_time %></span></a><br/>
+                            <a href='/prescription/detail/<%= i %>'><span>Prescription <%= i+1 %> | <%= results[i].h_receipt_time %></span></a><br/>
                             <span>-------------------------------------------------</span><br/>
                    <% } %>
                    

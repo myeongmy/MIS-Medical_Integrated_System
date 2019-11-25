@@ -28,6 +28,8 @@ app.use(session({
 app.set('view engine', 'ejs')
 app.set('views', './views')
 
+
+// Implemented by MyoungJin Sim
 app.get('/', function(req, res){
     //req.session.is_logined = 0;
     if(req.session.is_logined === true)
@@ -37,7 +39,7 @@ app.get('/', function(req, res){
         
 })
 
-
+// Implemented by Jihee Seon
 // sign in 할 때 세션에 접근한 사용자의 role을 저장해 현재 로그인을 한 사용자가 무슨 user인지 구분해 접근 제어를 한다.
 
 app.get('/login/:role', function(req, res){
@@ -94,7 +96,7 @@ app.get('/login/:role', function(req, res){
     }
 })
 
-
+// Implemented by MyoungJin Sim
 // 각각의 role마다 다른 회원가입 페이지로 이동
 app.get('/sign_up/:role', function(req, res){
     if(req.params.role === 'hospital')
@@ -107,7 +109,7 @@ app.get('/sign_up/:role', function(req, res){
         res.render('signup_insurancecompany.ejs', {role: req.params.role});
 })
 
-
+// Implemented by MyoungJin Sim
 // sign in 과정 (아이디와 비밀번호를 올바르게 입력하면 index 페이지로 이동, 다르게 입력하면 다시 입력하라는 팝업창 띄워짐)
 app.post('/sign_in/:role', function(req, res, next){
     
@@ -189,7 +191,7 @@ app.post('/sign_in/:role', function(req, res, next){
     
 })
 
-
+// Implemented by Jihee Seon
 // 로그아웃 기능 (로그아웃을 누르면 현재 로그인 되어 있는 세션 정보를 destroy한다)
 app.get('/logout', function(req, res){
     req.session.is_logined = false;
@@ -199,6 +201,7 @@ app.get('/logout', function(req, res){
 })
 
 
+// Implemented by MyoungJin Sim
 // 회원가입 시 데이터베이스에 사용자 정보 저장 (hospital table)
 app.post('/register/hospital', function(req, res){
     //connection.connect();
@@ -215,6 +218,7 @@ app.post('/register/hospital', function(req, res){
     })
 })
 
+// Implemented by MyoungJin Sim
 // 회원가입 시 데이터베이스에 사용자 정보 저장 (patient table)
 app.post('/register/patient', function(req, res){
     //connection.connect();
@@ -231,7 +235,7 @@ app.post('/register/patient', function(req, res){
     })
 })
 
-
+// Implemented by MyoungJin Sim
 // 회원가입 시 데이터베이스에 사용자 정보 저장 (pharmacy table)
 app.post('/register/pharmacy', function(req, res){
     //connection.connect();
@@ -248,6 +252,8 @@ app.post('/register/pharmacy', function(req, res){
     })
 })
 
+
+// Implemented by MyoungJin Sim
 // 회원가입 시 데이터베이스에 사용자 정보 저장 (insurance_company table)
 app.post('/register/insuranceCompany', function(req, res){
     //connection.connect();
@@ -264,6 +270,7 @@ app.post('/register/insuranceCompany', function(req, res){
     })
 })
 
+// Implemented by Jihee Seon
 // 병원이 medical chart를 작성하면 작성한 내역을 medical_chart table에 저장
 app.post('/create_chart', function(req, res){
     
@@ -279,7 +286,7 @@ app.post('/create_chart', function(req, res){
     })
 })
 
-
+// Implemented by Jihee Seon
 // 병원은 자신이 작성한 medical chart를 열람한다.
 app.get('/view_chart', function(req, res){
     
@@ -297,7 +304,7 @@ app.get('/view_chart', function(req, res){
     
 })
 
-
+// Implemented by MyoungJin Sim
 // medical_chart 열람 시 환자별로 선택해서 열람할 수 있는 기능
 app.post('/view_chart/patient', function(req, res){
     
@@ -315,7 +322,7 @@ app.post('/view_chart/patient', function(req, res){
     
 })
 
-
+//Implemented by MyoungJin Sim
 // 병원은 환자의 기본 정보와 그간의 medical history 내역을 확인 가능 (vDcombMedPrsc view table 이용)
 app.get('/view_patient', function(req, res){
     res.render('view_patient.ejs', {session: false});
@@ -331,6 +338,7 @@ app.post('/search', function(req, res){
     
 })
 
+// Implemented by Jihee Seon 
 // 환자는 자신이 처방받은 처방전 하나하나에 대한 각각의 상세정보 확인 가능
 app.get('/prescription/detail/:i', function(req, res){
     var sql = 'select pharmacy_id from pharmacy';
@@ -340,7 +348,7 @@ app.get('/prescription/detail/:i', function(req, res){
     
 })
 
-
+// Implemented by MyoungJin Sim
 // 환자가 약국에게 자신의 처방전을 전달 (transaction 이용)
 app.post('/pharmacy_tran', function(req, res){
     
@@ -375,7 +383,7 @@ app.post('/pharmacy_tran', function(req, res){
     })
 })
 
-
+// Implemented by Jihee Seon
 // 환자가 자신의 의료 영수증을 보험회사에게 전달하는 기능 (transaction 이용)
 app.post('/insurance_tran/:i', function(req, res){
 
@@ -421,6 +429,7 @@ app.post('/insurance_tran/:i', function(req, res){
     })
 })
 
+// Implemented by MyoungJin Sim
 // 환자는 자신의 의료 기록에 대한 영수증을 열람할 수 있다.
 app.get('/view_receipt', function(req, res){
     var sql = 'select * from patient where patient_id = ?';
@@ -436,7 +445,7 @@ app.get('/view_receipt', function(req, res){
     })
 })
 
-
+// Implemented by Jihee Seon
 // 환자는 자신의 영수증을 보험회사에게 전달 가능
 app.get('/send_receipt', function(req, res){
     var sql = 'select * from patient where patient_id = ?';
@@ -455,7 +464,7 @@ app.get('/send_receipt', function(req, res){
     
 })
 
-
+// Implemented by Jihee Seon
 //환자는 자신의 개인 정보(프로필)를 업데이트
 app.get('/update', function(req, res){
     var sql = 'select * from patient where patient_id = ?';
@@ -467,7 +476,7 @@ app.get('/update', function(req, res){
     })
 })
 
-
+// Implemented by MyoungJin Sim
 // 최종업데이트 버튼을 누르면 작성한 정보가 post method로 전달되어 update 쿼리문 실행
 app.post('/update_fin', function(req, res){
     var sql = 'update patient set patient_id = ?, patient_pw = ?, patient_name = ?, age = ?, contact = ? where patient_id = ?';
@@ -479,6 +488,8 @@ app.post('/update_fin', function(req, res){
     })
 })
 
+
+// Implemented by MyoungJin Sim
 // 약국에서 조제가 끝난 처방전은 finish 버튼을 눌러 내역에서 삭제한다.
 app.post('/delete_pres', function(req, res){
     var sql = 'delete from prescription_chart where chart_no = ?';
